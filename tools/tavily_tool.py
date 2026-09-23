@@ -4,22 +4,23 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-def fetch_tavily_sources(query: str, max_results: int = 5, search_depth: str = "advanced") -> list:
-    """Fetches web snippets using the Tavily API."""
-    api_key = os.getenv("TAVILY_API_KEY")
-    if not api_key:
-        raise ValueError("TAVILY_API_KEY is not set in environment variables.")
+client = TavilyClient(api_key=os.getenv("TAVILY_API_KEY"))
 
-    client = TavilyClient(api_key=api_key)
-    response = client.search(query=query, search_depth=search_depth, max_results=max_results)
+def tavily_search(query):
+    response = client.search(
+        query=query,
+        max_results=5
+    )
+    results = []
+    
+    for i, r in enumerate(response.get("results", []), 1):
+        title = r.get("title", "unknown")
+        url = r.get("url", "")
+        snippet = r.get("content", "").strip()
 
-    return [
-        {
-            "url": res.get("url"),
-            "title": res.get("title"),
-            "snippet": res.get("content"),
-            "credibility_score": 0.0,
-        }
-        for res in response.get("results", [])
-    ]
-
+        if len(snippet) > 300:
+            snippet = snippet[:300].rsplit(" ", 1)[0] + "..."
+        
+        results.append(f"{i}. **{title}**\n  {url}\n  {snippet}")
+        
+    return "\n\n".join(results)
