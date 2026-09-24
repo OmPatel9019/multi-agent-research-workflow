@@ -3,12 +3,12 @@ import traceback
 import uvicorn
 
 from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 
-from backend import run_travel_agent
+from backend import run_travel_agent, stream_travel_agent
 
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -90,6 +90,21 @@ async def travel_planner(request_data: TravelRequest):
             }
         )
 
+
+@app.post("/api/travel/stream")
+async def travel_planner_stream(request_data: TravelRequest):
+    """Server-Sent Events (SSE) streaming endpoint for intermediate status & real-time token streaming."""
+    user_message = request_data.message.strip()
+    if not user_message:
+        return JSONResponse(
+            status_code=400,
+            content={"success": False, "error": "Message cannot be empty."}
+        )
+
+    return StreamingResponse(
+        stream_travel_agent(user_message, request_data.thread_id),
+        media_type="text/event-stream"
+    )
 
 
 @app.get("/health")

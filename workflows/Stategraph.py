@@ -2,18 +2,19 @@ from langgraph.graph import StateGraph, START, END
 from backend import TravelState
 from agents.flight_agent import flight_agent
 from agents.hotel_agent import hotel_agent
-from agents.Itinerary_agent import itinerary_agent
-from agents.final_response_agent import final_agent
+from agents.planner_agent import planner_agent
 
 graph = StateGraph(TravelState)
 
+# Nodes
 graph.add_node("flight_agent", flight_agent)
 graph.add_node("hotel_agent", hotel_agent)
-graph.add_node("itinerary_agent", itinerary_agent)
-graph.add_node("final_agent", final_agent)
+graph.add_node("planner_agent", planner_agent)
 
+# Parallel Fan-Out: Execute flight research & hotel research concurrently
 graph.add_edge(START, "flight_agent")
-graph.add_edge("flight_agent", "hotel_agent")
-graph.add_edge("hotel_agent", "itinerary_agent")
-graph.add_edge("itinerary_agent", "final_agent")
-graph.add_edge("final_agent", END)
+graph.add_edge(START, "hotel_agent")
+
+# Fan-In: Once both research agents finish, run unified planner in a single LLM pass
+graph.add_edge(["flight_agent", "hotel_agent"], "planner_agent")
+graph.add_edge("planner_agent", END)

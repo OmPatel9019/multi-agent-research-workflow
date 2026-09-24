@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TripMate | Travel planner</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header class="app-header">
+        <a class="brand" href="/" aria-label="TripMate home">
+            <span class="brand-mark" aria-hidden="true">T</span>
+            <span><strong class="brand-title">TripMate</strong><span class="brand-subtitle">Thoughtful travel planning</span></span>
+        </a>
+        <div class="header-meta"><span class="live-dot" aria-hidden="true"></span><span>Live planning workspace</span></div>
+    </header>
+
+    <main class="app-shell">
+        <aside class="planner-sidebar">
+            <div class="eyebrow">Plan a journey</div>
+            <h1>Make room for the good parts.</h1>
+            <p class="intro">Tell us where you want to go, how you like to travel, and we will shape the details around you.</p>
+            <form id="travelForm" class="travel-form">
+                <label for="userQuery">Your trip brief</label>
+                <div class="input-wrapper"><textarea id="userQuery" name="query" rows="5" placeholder="e.g. A relaxed week in Tokyo in spring, with great food and a mid-range budget" autocomplete="off" required></textarea></div>
+                <button type="submit" id="submitBtn" class="btn-primary"><span class="btn-text">Build my itinerary</span><span class="btn-icon" aria-hidden="true">-&gt;</span></button>
+            </form>
+            <div class="starter-section">
+                <div class="section-label">Start with an idea</div>
+                <div class="quick-prompts">
+                    <button class="chip" data-prompt="Plan a 7 days Tokyo trip under $4,000 from New York">Tokyo, 7 days <span>$4k</span></button>
+                    <button class="chip" data-prompt="Plan a 5 days romantic Paris holiday under $3,500">Romantic Paris <span>5 days</span></button>
+                    <button class="chip" data-prompt="Plan a 6 days Bali tropical honeymoon with luxury villas">Bali honeymoon <span>6 days</span></button>
+                    <button class="chip" data-prompt="Plan a 4 days Swiss Alps adventure from London">Swiss Alps <span>4 days</span></button>
+                </div>
+            </div>
+            <div class="sidebar-note"><span class="note-mark" aria-hidden="true">i</span><p>Your brief is used to coordinate flight, hotel, and itinerary research in one pass.</p></div>
+        </aside>
+
+        <section class="workspace" aria-label="Trip planning workspace">
+            <div class="workspace-heading"><div><div class="eyebrow">Your planning desk</div><h2>From first idea to final plan</h2></div><span class="workspace-status">Ready when you are</span></div>
+            <section id="pipelineSection" class="pipeline-section panel hidden" aria-live="polite">
+                <div class="panel-heading"><div><div class="eyebrow">Live research</div><h3>Putting your trip together</h3></div><div id="pipelineTimer" class="pipeline-timer">0.0s elapsed</div></div>
+                <div class="pipeline-steps">
+                    <div id="step-flight" class="agent-step"><div class="step-marker">01</div><div class="step-info"><div class="step-name">Researching flights</div><div class="step-status">Waiting...</div></div><div class="step-badge pending">-</div></div>
+                    <div id="step-hotel" class="agent-step"><div class="step-marker">02</div><div class="step-info"><div class="step-name">Finding places to stay</div><div class="step-status">Waiting...</div></div><div class="step-badge pending">-</div></div>
+                    <div id="step-planner" class="agent-step"><div class="step-marker">03</div><div class="step-info"><div class="step-name">Curating your schedule</div><div class="step-status">Waiting...</div></div><div class="step-badge pending">-</div></div>
+                </div>
+                <div id="statusNotification" class="status-notification">Preparing your research...</div>
+            </section>
+            <section id="resultsSection" class="results-section panel hidden">
+                <div class="results-toolbar"><div><div class="eyebrow">Trip brief</div><h3>Your itinerary</h3></div><div class="actions"><button id="copyBtn" class="btn-tool" title="Copy itinerary">Copy itinerary</button><button id="printBtn" class="btn-tool" title="Print itinerary">Print</button></div></div>
+                <div class="tabs" role="tablist" aria-label="Trip research views"><button class="tab-btn active" data-tab="itineraryTab" role="tab">Itinerary</button><button class="tab-btn" data-tab="flightsTab" role="tab">Flights research</button><button class="tab-btn" data-tab="hotelsTab" role="tab">Stays research</button></div>
+                <div id="itineraryTab" class="tab-content active"><div class="stream-container"><div id="streamingOutput" class="markdown-body"></div><span id="typingCursor" class="typing-cursor" aria-hidden="true"></span></div></div>
+                <div id="flightsTab" class="tab-content"><div class="raw-data-card"><h4>Flight research</h4><div id="flightsOutput" class="markdown-body">No flight research captured yet.</div></div></div>
+                <div id="hotelsTab" class="tab-content"><div class="raw-data-card"><h4>Stay research</h4><div id="hotelsOutput" class="markdown-body">No hotel research captured yet.</div></div></div>
+            </section>
+            <div class="empty-state" id="emptyState"><div class="empty-line" aria-hidden="true"></div><p>Your research and day-by-day plan will appear here.</p></div>
+        </section>
+    </main>
+    <footer class="app-footer"><span>TripMate</span><span>Research-led travel planning</span></footer>
+    <script src="/static/script.js"></script>
+</body>
+</html>

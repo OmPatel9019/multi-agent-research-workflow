@@ -1,5 +1,5 @@
 from langchain_core.messages import HumanMessage, SystemMessage
-from backend import TravelState, llm
+from backend import TravelState, llm, extract_text_content
 
 
 def itinerary_agent(state: TravelState):
@@ -24,7 +24,7 @@ Make the itinerary practical, budget-aware, and easy to follow.
     ])
 
     return {
-        "itinerary": response.content,
+        "itinerary": extract_text_content(response.content),
         "messages": [response],
         "llm_calls": state.get("llm_calls", 0) + 1
     }
